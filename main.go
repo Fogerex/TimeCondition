@@ -44,9 +44,7 @@ func main() {
 			case "00:00":
 				string3 = fmt.Sprint("(date()=date(", datetime2.Year(), ",", int(datetime2.Month()), ",", datetime2.Day(), "))")
 			}
-
 			if datetime.Year() != datetime2.Year() || datetime.Month() != datetime2.Month() || datetime.Day() != datetime2.Day() {
-
 				output.SetText(fmt.Sprint(string1, string2, string3))
 			} else {
 				output.SetText(fmt.Sprint(string1, string3))
