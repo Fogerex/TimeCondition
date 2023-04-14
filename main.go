@@ -33,21 +33,13 @@ func main() {
 			if err != nil {
 				fmt.Println(err)
 			}
-			string1 := fmt.Sprint("(date()=date(", datetime.Year(), ",", int(datetime.Month()), ",", datetime.Day(), ")&&time()>=time(", datetime.Hour(), ",", datetime.Minute(), "))||\n")
-			switch datetime.Format("15:04") {
-			case "00:00":
-				string1 = fmt.Sprint("(date()=date(", datetime.Year(), ",", int(datetime.Month()), ",", datetime.Day(), "))||\n")
-			}
-			string2 := fmt.Sprint("(date()>date(", datetime.Year(), ",", int(datetime.Month()), ",", datetime.Day(), ")&&date()<date(", datetime2.Year(), ",", int(datetime2.Month()), ",", datetime2.Day(), "))||\n")
+			string1 := fmt.Sprint("(date()=date(", datetime.Year(), ",", int(datetime.Month()), ",", datetime.Day(), ")&&time()>=time(", datetime.Hour(), ",", datetime.Minute(), "))")
+			string2 := fmt.Sprint("(date()>date(", datetime.Year(), ",", int(datetime.Month()), ",", datetime.Day(), ")&&date()<date(", datetime2.Year(), ",", int(datetime2.Month()), ",", datetime2.Day(), "))")
 			string3 := fmt.Sprint("(date()=date(", datetime2.Year(), ",", int(datetime2.Month()), ",", datetime2.Day(), ")&&time()<=time(", datetime2.Hour(), ",", datetime2.Minute(), "))")
-			switch datetime2.Format("15:04") {
-			case "00:00":
-				string3 = fmt.Sprint("(date()=date(", datetime2.Year(), ",", int(datetime2.Month()), ",", datetime2.Day(), "))")
-			}
-			if datetime.Year() != datetime2.Year() || datetime.Month() != datetime2.Month() || datetime.Day() != datetime2.Day() {
-				output.SetText(fmt.Sprint(string1, string2, string3))
+			if datetime.Format("02.01.2006") == datetime2.Format("02.01.2006") {
+				output.SetText(fmt.Sprint(string1, "||\n", string3))
 			} else {
-				output.SetText(fmt.Sprint(string1, string3))
+				output.SetText(fmt.Sprint(string1, "||\n", string2, "||\n", string3))
 			}
 			time.Sleep(time.Second)
 		}
@@ -60,5 +52,4 @@ func main() {
 	frame := widget.NewCard("Enter Date and Time             ", "", content)
 	myWindow.SetContent(frame)
 	myWindow.ShowAndRun()
-
 }
