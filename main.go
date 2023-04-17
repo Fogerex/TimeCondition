@@ -23,27 +23,13 @@ func main() {
 	end := nowdate.Format(layout)
 	endbox.SetText(end)
 	output := widget.NewMultiLineEntry()
-	go func() {
-		for {
-			datetime, err := time.Parse(layout, startbox.Text)
-			if err != nil {
-				fmt.Println(err)
-			}
-			datetime2, err := time.Parse(layout, endbox.Text)
-			if err != nil {
-				fmt.Println(err)
-			}
-			string1 := fmt.Sprint("(date()=date(", datetime.Year(), ",", int(datetime.Month()), ",", datetime.Day(), ")&&time()>=time(", datetime.Hour(), ",", datetime.Minute(), "))")
-			string2 := fmt.Sprint("(date()>date(", datetime.Year(), ",", int(datetime.Month()), ",", datetime.Day(), ")&&date()<date(", datetime2.Year(), ",", int(datetime2.Month()), ",", datetime2.Day(), "))")
-			string3 := fmt.Sprint("(date()=date(", datetime2.Year(), ",", int(datetime2.Month()), ",", datetime2.Day(), ")&&time()<=time(", datetime2.Hour(), ",", datetime2.Minute(), "))")
-			if datetime.Format("02.01.2006") == datetime2.Format("02.01.2006") {
-				output.SetText(fmt.Sprint(string1, "||\n", string3))
-			} else {
-				output.SetText(fmt.Sprint(string1, "||\n", string2, "||\n", string3))
-			}
-			time.Sleep(time.Second)
-		}
-	}()
+
+	startbox.OnChanged = func(text string) {
+		output.SetText(changetime(layout, startbox, endbox, output))
+	}
+	endbox.OnChanged = func(text string) {
+		output.SetText(changetime(layout, startbox, endbox, output))
+	}
 	btn := widget.NewButton("Копировать", func() {
 		clipboard.WriteAll(output.Text)
 	})
@@ -52,4 +38,28 @@ func main() {
 	frame := widget.NewCard("Enter Date and Time             ", "", content)
 	myWindow.SetContent(frame)
 	myWindow.ShowAndRun()
+}
+
+func changetime(layout string, startbox *widget.Entry, endbox *widget.Entry, output *widget.Entry) string {
+
+	datetime, err := time.Parse(layout, startbox.Text)
+	if err != nil {
+		fmt.Println(err)
+	}
+	datetime2, err := time.Parse(layout, endbox.Text)
+	if err != nil {
+		fmt.Println(err)
+	}
+	string1 := fmt.Sprint("(date()=date(", datetime.Year(), ",", int(datetime.Month()), ",", datetime.Day(), ")&&time()>=time(", datetime.Hour(), ",", datetime.Minute(), "))")
+	string2 := fmt.Sprint("(date()>date(", datetime.Year(), ",", int(datetime.Month()), ",", datetime.Day(), ")&&date()<date(", datetime2.Year(), ",", int(datetime2.Month()), ",", datetime2.Day(), "))")
+	string3 := fmt.Sprint("(date()=date(", datetime2.Year(), ",", int(datetime2.Month()), ",", datetime2.Day(), ")&&time()<=time(", datetime2.Hour(), ",", datetime2.Minute(), "))")
+	if datetime.Format("02.01.2006") == datetime2.Format("02.01.2006") {
+		output.SetText(fmt.Sprint(string1, "||\n", string3))
+	} else {
+		output.SetText(fmt.Sprint(string1, "||\n", string2, "||\n", string3))
+	}
+	return output.Text
+
+	//time.Sleep(time.Second)
+
 }
