@@ -7,7 +7,6 @@ import (
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
-	"github.com/atotto/clipboard"
 )
 
 func main() {
@@ -31,7 +30,8 @@ func main() {
 		output.SetText(changetime(layout, startbox, endbox, output))
 	}
 	btn := widget.NewButton("Копировать", func() {
-		clipboard.WriteAll(output.Text)
+		// Записываем содержимое в буфер обмена
+		myWindow.Clipboard().SetContent(output.Text)
 	})
 	dateTimeBox := container.NewVBox(startbox, endbox, output, btn)
 	content := container.NewVBox(dateTimeBox)
@@ -54,7 +54,7 @@ func changetime(layout string, startbox *widget.Entry, endbox *widget.Entry, out
 	string2 := fmt.Sprint("(date()>date(", datetime.Year(), ",", int(datetime.Month()), ",", datetime.Day(), ")&&date()<date(", datetime2.Year(), ",", int(datetime2.Month()), ",", datetime2.Day(), "))")
 	string3 := fmt.Sprint("(date()=date(", datetime2.Year(), ",", int(datetime2.Month()), ",", datetime2.Day(), ")&&time()<=time(", datetime2.Hour(), ",", datetime2.Minute(), "))")
 	if datetime.Format("02.01.2006") == datetime2.Format("02.01.2006") {
-		output.SetText(fmt.Sprint(string1, "||\n", string3))
+		output.SetText(fmt.Sprint(string1, "&&\n", string3))
 	} else {
 		output.SetText(fmt.Sprint(string1, "||\n", string2, "||\n", string3))
 	}
