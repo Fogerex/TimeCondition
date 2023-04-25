@@ -54,9 +54,9 @@ func changetime(layout string, startbox *widget.Entry, endbox *widget.Entry, out
 	string2 := fmt.Sprint("(date()>date(", datetime.Year(), ",", int(datetime.Month()), ",", datetime.Day(), ")&&date()<date(", datetime2.Year(), ",", int(datetime2.Month()), ",", datetime2.Day(), "))")
 	string3 := fmt.Sprint("(date()=date(", datetime2.Year(), ",", int(datetime2.Month()), ",", datetime2.Day(), ")&&time()<=time(", datetime2.Hour(), ",", datetime2.Minute(), "))")
 	if datetime.Format("02.01.2006") == datetime2.Format("02.01.2006") {
-		output.SetText(fmt.Sprint(string1, "&&\n", string3))
+		output.SetText(fmt.Sprint(string1, "&&", "\n", string3))
 	} else {
-		output.SetText(fmt.Sprint(string1, "||\n", string2, "||\n", string3))
+		output.SetText(fmt.Sprint(string1, "||", "\n", string2, "||", "\n", string3))
 	}
 	return output.Text
 
