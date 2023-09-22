@@ -3,16 +3,33 @@ package main
 import (
 	"fmt"
 	"time"
+	"flag"
 
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 )
 
+var (
+	version     = "0.1.0" // версия приложения
+	showVersion bool      // флаг, указывающий на необходимость вывода версии
+)
+
+func init() {
+	flag.BoolVar(&showVersion, "v", false, "вывести версию приложения и выйти")
+	flag.Parse()
+}
+
 func main() {
+		// версия приложения
+		if showVersion {
+			fmt.Println(version)
+			return
+		}
+
 	layout := "15:04 02.01.2006"
 	myApp := app.New()
-	myWindow := myApp.NewWindow("Date and Time Condition for ICM")
+	myWindow := myApp.NewWindow( fmt.Sprintf("Date and Time Condition for ICM %s",version))
 	now := time.Now().Local()
 	nowdate := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.Local)
 	startbox := widget.NewEntry()
